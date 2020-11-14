@@ -4,12 +4,23 @@
  */
 async function handleRequest(request) { 
   const url_parts = request.url.split("/");
+  num_parts = url_parts.length;
+  rsc_index = (url_parts[num_parts-1].length === 0) ? num_parts-2 : num_parts-1;
 
   // The path /links is requested, serve the JS array of link objects 
-  if (url_parts[url_parts.length - 1].toLowerCase() === "links"){
+  if (url_parts[rsc_index].toLowerCase() === "links"){
       let resp = new Response(body=JSON.stringify(value=links, replacer=null, space=2));
-      resp.headers.set("Content-Type", "application/json")
-      return resp
+      resp.headers.set("Content-Type", "application/json");
+      return resp;
+  }
+  else if (url_parts[rsc_index].toLowerCase() === "linkedin" || url_parts[rsc_index].toLowerCase() === "in"){
+      return Response.redirect(socials[0]["url"], 301);
+  }
+  else if (url_parts[rsc_index].toLowerCase() === "resume"){
+      return Response.redirect(socials[1]["url"], 301);
+  }
+  else if (url_parts[rsc_index].toLowerCase() === "git" || url_parts[rsc_index].toLowerCase() === "github"){
+      return Response.redirect(socials[2]["url"], 301);
   }
 
   // Otherwise rewrite and serve the HTML page
@@ -29,10 +40,9 @@ async function handleRequest(request) {
 class SetName{
   constructor(name) { this.name = name; }
   async element(element){ 
-    element.setInnerContent(this.name); 
-    element.classList.className = "text-md text-black mt-2 font-semibold";
-    console.log("Done")
-  }
+      element.setInnerContent(this.name);
+      element.setAttribute("class", "text-md text-black mt-2 font-semibold");
+    }
 }
 // Removes the default style="display: none" attribute
 class EnableDisplay {
@@ -81,29 +91,29 @@ class SetColor{
 // HTML Rewriter resources, modify as necessary
 const links = [
   {
-      "name": "A Better Internet!",
-      "url": "https://www.cloudflare.com/learning/what-is-cloudflare/"
+      "name": "LinkedIn",
+      "url": "https://www.linkedin.com/in/devin-suy-8651b2139/"
   },
   {
-      "name": "Register To Vote",
-      "url": "https://vote.gov/"
+      "name": "Resume",
+      "url": "https://drive.google.com/file/d/16oocU1nh7n2fxVhQ_FQqS4GbUbRx3-ZV/view"
   },
   {
-      "name": "Help End The Digital Divide",
-      "url": "https://www.close-the-gap.org/donate"
+      "name": "GitHub Repository",
+      "url": "https://github.com/devinsuy"
   }
 ];
 const avatar = "https://i.imgur.com/urUOtek.jpg";
 const name = "Devin Suy";
-const bg_color = "bg-gray-300";
+const bg_color = "bg-blue-100";
 const socials = [
   {
       "url": "https://www.linkedin.com/in/devin-suy-8651b2139/",
       "logo": "https://simpleicons.org/icons/linkedin.svg"
   },
   {
-      "url": "https://www.instagram.com/dev__suy/",
-      "logo": "https://simpleicons.org/icons/instagram.svg"
+      "url": "https://drive.google.com/file/d/16oocU1nh7n2fxVhQ_FQqS4GbUbRx3-ZV/view",
+      "logo": "https://www.flaticon.com/svg/static/icons/svg/85/85047.svg"
   },
   {
       "url": "https://github.com/devinsuy",
